@@ -67,13 +67,17 @@ Bool_t MatrixPrediction::Process(Long64_t entry)
   if(m_dbg>3) {
     DiLepEvtType ll(getDiLepEvtType(l));
     bool ee(ll==ET_ee), mm(ll==ET_mm);
-    if(passSrSS)
+    if(passSrSS){
+      bool l0IsSig(SusyNtTools::isSignalLepton(l[0], m_baseElectrons, m_baseMuons, nt.evt()->nVtx, nt.evt()->isMC));
+      bool l1IsSig(SusyNtTools::isSignalLepton(l[1], m_baseElectrons, m_baseMuons, nt.evt()->nVtx, nt.evt()->isMC));
       cout<<"MatrixPrediction passSrSS("<<(passSrSS?"true":"false")<<")"
           <<" run "<<nt.evt()->run<<" evt "<<nt.evt()->event<<" "<<(ee?"ee":(mm?"mm":"em"))
-          <<" l0: pt="<<l[0]->Pt()<<" eta="<<l[0]->Eta()
-          <<" l1: pt="<<l[1]->Pt()<<" eta="<<l[1]->Eta()
+          <<" l0: isSig"<<l0IsSig<<" pt="<<l[0]->Pt()<<" eta="<<l[0]->Eta()
+          <<" l1: isSig"<<l1IsSig<<" pt="<<l[1]->Pt()<<" eta="<<l[1]->Eta()
+          <<" metrel : "<<getMetRel(m,ncl,j)
           <<" weight="<<m_weightComponents.fake
           <<endl;
+    }
   }
   if(!passSrSS) return false;
   return kTRUE;
